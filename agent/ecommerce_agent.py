@@ -26,7 +26,8 @@ class EcommerceAgent:
         self.conversation_history = {}
         self.current_user_id = None
 
-        logger.info("电商推荐 Agent 初始化完成")
+        llm_mode = "Mock LLM" if self.response_generator.use_mock else "真实 LLM"
+        logger.info(f"✅ 电商推荐 Agent 初始化完成 - {llm_mode}模式")
 
     def chat(self, user_id, user_message, top_k=20):
         """

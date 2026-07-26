@@ -9,7 +9,7 @@ class QdrantClientWrapper:
     """Qdrant 客户端封装"""
 
     def __init__(self, host='localhost', port=6333, collection_name='ecommerce_items',
-                 embedding_dim=64, distance='Cosine'):
+                 embedding_dim=64, distance='Cosine', use_hnsw=True):
         """
         初始化 Qdrant 客户端
 
@@ -18,12 +18,14 @@ class QdrantClientWrapper:
         :param collection_name: 集合名称
         :param embedding_dim: 向量维度
         :param distance: 距离度量 ('Cosine', 'Euclid', 'Dot')
+        :param use_hnsw: 是否使用 HNSW 索引（默认开启）
         """
         self.host = host
         self.port = port
         self.collection_name = collection_name
         self.embedding_dim = embedding_dim
         self.distance = distance
+        self.use_hnsw = use_hnsw
         self.client = None
         self._local_mode = False
         self._local_vectors = {}
@@ -36,14 +38,22 @@ class QdrantClientWrapper:
         try:
             from qdrant_client import QdrantClient
 
-            self.client = QdrantClient(host=self.host, port=self.port)
-            logger.info(f"Qdrant 客户端已连接: {self.host}:{self.port}")
+            self.client = QdrantClient(host=self.host, port=self.port, check_compatibility=False)
+
+            try:
+                collections = self.client.get_collections()
+                logger.info(f"✅ [Qdrant模式] 客户端已连接: {self.host}:{self.port}")
+            except Exception as e:
+                logger.info(f"🔄 [本地模式] Qdrant连接失败，自动降级: {e}")
+                self._local_mode = True
+                self.client = None
+
         except ImportError:
-            logger.warning("qdrant_client 未安装，使用本地内存模式")
+            logger.info(f"🔄 [本地模式] qdrant_client未安装，使用内存模式")
             self._local_mode = True
             self.client = None
         except Exception as e:
-            logger.warning(f"Qdrant 连接失败，使用本地内存模式: {e}")
+            logger.info(f"🔄 [本地模式] Qdrant初始化失败，使用内存模式: {e}")
             self._local_mode = True
             self.client = None
 
@@ -67,7 +77,7 @@ class QdrantClientWrapper:
             return True
 
         try:
-            from qdrant_client.http.models import Distance, VectorParams
+            from qdrant_client.http.models import Distance, VectorParams, HnswConfig
 
             distance_map = {
                 'Cosine': Distance.COSINE,
@@ -75,14 +85,30 @@ class QdrantClientWrapper:
                 'Dot': Distance.DOT
             }
 
-            self.client.create_collection(
-                collection_name=collection_name,
-                vectors_config=VectorParams(
-                    size=embedding_dim,
-                    distance=distance_map.get(distance, Distance.COSINE)
-                )
+            vectors_config = VectorParams(
+                size=embedding_dim,
+                distance=distance_map.get(distance, Distance.COSINE)
             )
-            logger.info(f"集合已创建: {collection_name}")
+
+            if self.use_hnsw:
+                self.client.create_collection(
+                    collection_name=collection_name,
+                    vectors_config=vectors_config,
+                    hnsw_config=HnswConfig(
+                        m=16,
+                        ef_construct=200,
+                        full_scan_threshold=10000,
+                        max_indexing_threads=0
+                    )
+                )
+                logger.info(f"✅ [Qdrant模式] 集合已创建（使用HNSW索引）: {collection_name}")
+            else:
+                self.client.create_collection(
+                    collection_name=collection_name,
+                    vectors_config=vectors_config
+                )
+                logger.info(f"✅ [Qdrant模式] 集合已创建（使用Flat索引）: {collection_name}")
+
             return True
 
         except Exception as e:
@@ -163,7 +189,7 @@ class QdrantClientWrapper:
                     self._local_vectors[collection_name].append(vec)
                     self._local_payloads[collection_name].append(payload)
 
-            logger.info(f"[本地模式] 已插入 {len(vectors)} 个向量点")
+            logger.info(f"✅ [本地模式] 已插入 {len(vectors)} 个向量点")
             return True
 
         try:
@@ -178,7 +204,7 @@ class QdrantClientWrapper:
                 collection_name=collection_name,
                 points=points
             )
-            logger.info(f"已插入 {len(vectors)} 个向量点")
+            logger.info(f"✅ [Qdrant模式] 已插入 {len(vectors)} 个向量点")
             return True
 
         except Exception as e:
@@ -197,25 +223,47 @@ class QdrantClientWrapper:
         collection_name = collection_name or self.collection_name
 
         if self._local_mode:
+            logger.info(f"🔍 [本地模式] 开始向量检索，limit={limit}")
             return self._local_search(query_vector, limit, collection_name)
 
         try:
             from qdrant_client.http.models import Filter
 
-            results = self.client.search(
-                collection_name=collection_name,
-                query_vector=query_vector.tolist() if hasattr(query_vector, 'tolist') else query_vector,
-                limit=limit
-            )
+            logger.info(f"🔍 [Qdrant模式] 开始向量检索，limit={limit}")
+            
+            q_vec = query_vector.tolist() if hasattr(query_vector, 'tolist') else query_vector
+            
+            if hasattr(self.client, 'search'):
+                results = self.client.search(
+                    collection_name=collection_name,
+                    query_vector=q_vec,
+                    limit=limit
+                )
+            elif hasattr(self.client, 'query_points'):
+                results = self.client.query_points(
+                    collection_name=collection_name,
+                    query=q_vec,
+                    limit=limit
+                ).points
+            else:
+                results = []
+                raise AttributeError("Qdrant客户端没有search或query_points方法")
 
             return [
                 {'id': hit.id, 'score': hit.score, 'payload': hit.payload}
                 for hit in results
             ]
 
+        except AttributeError as e:
+            logger.info(f"🔄 [本地模式] Qdrant API版本不兼容，自动降级: {e}")
+            self._local_mode = True
+            self.client = None
+            return self._local_search(query_vector, limit, collection_name)
         except Exception as e:
-            logger.error(f"检索失败: {e}")
-            return []
+            logger.info(f"🔄 [本地模式] Qdrant检索失败，自动降级: {e}")
+            self._local_mode = True
+            self.client = None
+            return self._local_search(query_vector, limit, collection_name)
 
     def _local_search(self, query_vector, limit, collection_name):
         """本地内存模式下的相似度检索"""

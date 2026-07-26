@@ -38,15 +38,16 @@ class RedisClientWrapper:
                 port=self.port,
                 db=self.db,
                 password=self.password,
-                decode_responses=True
+                decode_responses=True,
+                protocol=2
             )
             self.client.ping()
-            logger.info(f"Redis 连接成功: {self.host}:{self.port}")
+            logger.info(f"✅ [Redis模式] 连接成功: {self.host}:{self.port}")
         except ImportError:
-            logger.warning("redis 包未安装，使用本地内存模式")
+            logger.info(f"🔄 [本地模式] redis包未安装，使用内存模式")
             self._local_mode = True
         except Exception as e:
-            logger.warning(f"Redis 连接失败，使用本地内存模式: {e}")
+            logger.info(f"🔄 [本地模式] Redis连接失败，使用内存模式: {e}")
             self._local_mode = True
 
     def get(self, key):

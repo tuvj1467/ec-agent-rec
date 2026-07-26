@@ -99,6 +99,10 @@ class LightGCN(nn.Module):
         item_emb = self.item_embedding.weight
         all_emb = torch.cat([user_emb, item_emb], dim=0)
 
+        device = all_emb.device
+        if self.norm_adj_matrix.device != device:
+            self.norm_adj_matrix = self.norm_adj_matrix.to(device)
+
         embeddings_list = [all_emb]
 
         for _ in range(self.num_layers):
