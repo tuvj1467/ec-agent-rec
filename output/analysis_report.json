@@ -1,0 +1,299 @@
+{
+  "project": "电商用户行为分析",
+  "data_summary": {
+    "total_records": 98885,
+    "total_users": 90962,
+    "total_items": 80783,
+    "total_categories": 3970,
+    "behavior_distribution": {
+      "pv": 88591,
+      "cart": 5455,
+      "fav": 2845,
+      "buy": 1994
+    },
+    "date_range": {
+      "start": "2017-11-25",
+      "end": "2017-12-03"
+    }
+  },
+  "key_metrics": {
+    "daily_active_users": 9682,
+    "weekly_active_users": 41930,
+    "pv_to_buy_conversion": 2.42068183757298,
+    "day_7_retention": 0.33762782930902085,
+    "avg_product_conversion": 0.5392254882691399,
+    "total_users": 90962,
+    "total_items": 80783,
+    "total_records": 98885
+  },
+  "analysis": {
+    "user_analysis": {
+      "activity": {
+        "avg_daily_active": 9682,
+        "max_daily_active": 12215,
+        "min_daily_active": 8634
+      },
+      "conversion": {
+        "pv_to_buy_conversion": 2.42068183757298,
+        "pv_to_cart_conversion": 6.597759711370867,
+        "pv_to_fav_conversion": 3.4335653255000422,
+        "cart_to_buy_conversion": 36.68945132089414,
+        "fav_to_buy_conversion": 70.50053248136315
+      },
+      "retention": {
+        "day_1_retention": 1.584534938995405,
+        "day_3_retention": 0.9958192655071122,
+        "day_7_retention": 0.33762782930902085,
+        "day_14_retention": 0.0,
+        "day_30_retention": 0.0
+      },
+      "segments": {
+        "新用户": 88976,
+        "高转化用户": 1986
+      },
+      "time_distribution": {
+        "hour_distribution": {
+          "0": 3043,
+          "1": 3670,
+          "2": 4356,
+          "3": 4150,
+          "4": 4219,
+          "5": 4458,
+          "6": 4681,
+          "7": 4764,
+          "8": 4577,
+          "9": 4172,
+          "10": 4276,
+          "11": 5409,
+          "12": 6552,
+          "13": 7408,
+          "14": 7248,
+          "15": 5569,
+          "16": 2701,
+          "17": 1201,
+          "18": 683,
+          "19": 479,
+          "20": 440,
+          "21": 512,
+          "22": 1105,
+          "23": 1991
+        },
+        "weekday_distribution": {
+          "周一": 8823,
+          "周二": 8634,
+          "周三": 9177,
+          "周四": 9258,
+          "周五": 9886,
+          "周六": 21302,
+          "周日": 19783
+        },
+        "peak_hours": [
+          13,
+          14,
+          12
+        ],
+        "peak_days": [
+          "周六",
+          "周日"
+        ]
+      }
+    },
+    "product_analysis": {
+      "top_pv": [
+        {
+          "item_id": 3845720,
+          "category_id": 3607361,
+          "count": 27,
+          "rank": 1
+        },
+        {
+          "item_id": 812879,
+          "category_id": 4756105,
+          "count": 26,
+          "rank": 2
+        },
+        {
+          "item_id": 2331370,
+          "category_id": 3607361,
+          "count": 23,
+          "rank": 3
+        },
+        {
+          "item_id": 5057288,
+          "category_id": 982926,
+          "count": 22,
+          "rank": 4
+        },
+        {
+          "item_id": 640975,
+          "category_id": 2355072,
+          "count": 20,
+          "rank": 5
+        }
+      ],
+      "top_buy": [
+        {
+          "item_id": 3031354,
+          "category_id": 2735466,
+          "count": 3,
+          "rank": 1
+        },
+        {
+          "item_id": 4454651,
+          "category_id": 4159072,
+          "count": 3,
+          "rank": 2
+        },
+        {
+          "item_id": 5136894,
+          "category_id": 4169506,
+          "count": 2,
+          "rank": 3
+        },
+        {
+          "item_id": 168877,
+          "category_id": 570735,
+          "count": 2,
+          "rank": 4
+        },
+        {
+          "item_id": 2057387,
+          "category_id": 5125081,
+          "count": 2,
+          "rank": 5
+        }
+      ],
+      "category_conversion": [
+        {
+          "category_id": 813818,
+          "count_pv": 1,
+          "unique_users_pv": 1,
+          "unique_items_pv": 1,
+          "rank_pv": 3592,
+          "count_buy": 2,
+          "unique_users_buy": 2,
+          "unique_items_buy": 1,
+          "rank_buy": 205,
+          "conversion_rate": 200.0
+        },
+        {
+          "category_id": 1132465,
+          "count_pv": 1,
+          "unique_users_pv": 1,
+          "unique_items_pv": 1,
+          "rank_pv": 3501,
+          "count_buy": 2,
+          "unique_users_buy": 2,
+          "unique_items_buy": 2,
+          "rank_buy": 260,
+          "conversion_rate": 200.0
+        },
+        {
+          "category_id": 2223246,
+          "count_pv": 1,
+          "unique_users_pv": 1,
+          "unique_items_pv": 1,
+          "rank_pv": 3151,
+          "count_buy": 2,
+          "unique_users_buy": 2,
+          "unique_items_buy": 2,
+          "rank_buy": 316,
+          "conversion_rate": 200.0
+        },
+        {
+          "category_id": 1842203,
+          "count_pv": 1,
+          "unique_users_pv": 1,
+          "unique_items_pv": 1,
+          "rank_pv": 3307,
+          "count_buy": 1,
+          "unique_users_buy": 1,
+          "unique_items_buy": 1,
+          "rank_buy": 391,
+          "conversion_rate": 100.0
+        },
+        {
+          "category_id": 2950381,
+          "count_pv": 1,
+          "unique_users_pv": 1,
+          "unique_items_pv": 1,
+          "rank_pv": 2928,
+          "count_buy": 1,
+          "unique_users_buy": 1,
+          "unique_items_buy": 1,
+          "rank_buy": 522,
+          "conversion_rate": 100.0
+        }
+      ],
+      "conversion_stats": {
+        "avg_conversion_rate": 0.5392254882691399,
+        "median_conversion_rate": 0.0,
+        "max_conversion_rate": 200.0,
+        "min_conversion_rate": 0.0,
+        "products_with_conversion": 510,
+        "total_products": 73462
+      }
+    },
+    "conversion_analysis": {
+      "funnel": {
+        "pv_to_cart": 6.597759711370867,
+        "pv_to_fav": 3.4335653255000422,
+        "pv_to_buy": 2.42068183757298,
+        "cart_to_buy": 36.68945132089414,
+        "fav_to_buy": 70.50053248136315,
+        "cart_rate": 6.157510356582497,
+        "fav_rate": 3.2113871612240525,
+        "buy_rate": 2.250792969940513
+      },
+      "best_time": {
+        "hour": 4,
+        "day": "周四"
+      },
+      "common_paths": [
+        {
+          "path": "pv",
+          "user_count": 80774,
+          "percentage": 88.79971856379586,
+          "converted": false
+        },
+        {
+          "path": "cart",
+          "user_count": 4708,
+          "percentage": 5.17578769156351,
+          "converted": false
+        },
+        {
+          "path": "fav",
+          "user_count": 2435,
+          "percentage": 2.6769420197445086,
+          "converted": false
+        },
+        {
+          "path": "buy",
+          "user_count": 1758,
+          "percentage": 1.9326751830434685,
+          "converted": true
+        },
+        {
+          "path": "cart -> pv",
+          "user_count": 332,
+          "percentage": 0.3649875772300521,
+          "converted": false
+        }
+      ]
+    }
+  },
+  "insights": [
+    "当前浏览到购买转化率为 2.42%，低于行业平均水平，建议优化转化流程",
+    "7日留存率为 0.34%，用户粘性有待提升",
+    "用户活跃高峰时段为 [13, 14, 12] 点，建议在这些时段加大营销投入"
+  ],
+  "recommendations": [
+    "优化商品详情页，提升用户浏览到购买的转化率",
+    "针对高活跃时段制定促销活动策略",
+    "加强新用户引导，提升首日留存率",
+    "分析低转化分类的原因，优化商品结构",
+    "针对高价值用户群体提供专属服务和优惠",
+    "优化购物车流程，降低加购到购买的流失率"
+  ]
+}
